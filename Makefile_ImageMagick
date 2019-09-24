@@ -113,6 +113,44 @@ $(CACHE_DIR)/lib/libopenjp2.a: $(OPENJP2_SOURCE) $(CACHE_DIR)/lib/libpng.a $(CAC
 	make clean
 	make install
 
+## dcraw
+DCRAW_SOURCE=dcraw.c
+$(DCRAW_SOURCE):
+	curl -L http://www.dechifro.org/dcraw/dcraw.c -o $(DCRAW_SOURCE)
+
+$(CACHE_DIR)/lib/dcraw.a: $(DCRAW_SOURCE)
+	yum -y install jasper jasper-devel lcms2 lcms2-devel
+	gcc -o dcraw -O4 dcraw.c -lm -ljasper -ljpeg -llcms2
+	cp dcraw $(TARGET_DIR)/bin/dcraw
+
+## LibRaw
+## LIBRAW_SOURCE=LibRaw.tar.gz
+## $(LIBRAW_SOURCE):
+## 	curl -L https://www.libraw.org/data/LibRaw-0.19.5.tar.gz -o $(LIBRAW_SOURCE)
+
+## $(CACHE_DIR)/lib/libraw.a: $(LIBRAW_SOURCE)
+## 	tar -xf $<
+## 	cd LibRaw-*
+## 	yum -y install gtk3-devel gcc-c++
+## 	./configure
+## 	make clean
+## 	make
+## 	make install
+## 	cp dcraw $(TARGET_DIR)/bin/dcraw
+
+## ufraw
+## UFRAW_SOURCE=ufraw.tar.gz
+## $(UFRAW_SOURCE):
+## 	curl -L https://sourceforge.net/projects/ufraw/files/ufraw/ufraw-0.22/ufraw-0.22.tar.gz/download?use_mirror=jaist -o $(UFRAW_SOURCE)
+
+## $(CACHE_DIR)/lib/ufraw.a: $(UFRAW_SOURCE)
+## 	tar -xf $<
+## 	cd ufraw-*
+## 	yum -y install gtk3-devel 
+## 	$(CONFIGURE)	 
+## 	make
+## 	make install
+## 	cp dcraw $(TARGET_DIR)/bin/dcraw
 
 ## ImageMagick
 
@@ -127,7 +165,8 @@ LIBS:=$(CACHE_DIR)/lib/libjpeg.a \
 	$(CACHE_DIR)/lib/libopenjp2.a \
 	$(CACHE_DIR)/lib/libtiff.a \
 	$(CACHE_DIR)/lib/libbz2.a \
-	$(CACHE_DIR)/lib/libwebp.a
+	$(CACHE_DIR)/lib/libwebp.a \
+	$(CACHE_DIR)/lib/dcraw.a
 
 $(TARGET_DIR)/bin/identify: $(IMAGE_MAGICK_SOURCE) $(LIBS)
 	tar xf $<
